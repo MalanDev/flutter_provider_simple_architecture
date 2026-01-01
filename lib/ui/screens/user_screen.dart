@@ -16,7 +16,7 @@ class _UserScreenState extends State<UserScreen> {
     super.initState();
     // Fetch data when the screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<UserProvider>(context, listen: false).getAllUsers();
+      Provider.of<UserProvider>(context, listen: false).getUsers();
     });
   }
 
@@ -30,8 +30,8 @@ class _UserScreenState extends State<UserScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (userProvider.errorMessage.isNotEmpty) {
-            return Center(child: Text(userProvider.errorMessage));
+          if (userProvider.error.isNotEmpty) {
+            return Center(child: Text(userProvider.error));
           }
 
           return ListView.builder(
@@ -49,7 +49,7 @@ class _UserScreenState extends State<UserScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () =>
-            Provider.of<UserProvider>(context, listen: false).getAllUsers(),
+            Provider.of<UserProvider>(context, listen: false).getUsers(),
         child: const Icon(Icons.refresh),
       ),
     );

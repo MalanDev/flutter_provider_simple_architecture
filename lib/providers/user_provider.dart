@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 
 import '../data/models/user_model.dart';
-import '../data/services/api_service.dart';
+import '../data/repositories/user_repository.dart';
 
 class UserProvider with ChangeNotifier {
-  final ApiService _apiService = ApiService();
+  final UserRepository userRepository;
 
-  List<User> _users = [];
+  UserProvider({required this.userRepository});
+
+  List<UserModel> _users = [];
   bool _isLoading = false;
-  String _errorMessage = '';
+  String _error = '';
 
-  List<User> get users => _users;
+  List<UserModel> get users => _users;
   bool get isLoading => _isLoading;
-  String get errorMessage => _errorMessage;
+  String get error => _error;
 
-  Future<void> getAllUsers() async {
+  Future<void> getUsers() async {
     _isLoading = true;
-    _errorMessage = '';
-    notifyListeners(); // Show loading spinner
+    _error = '';
+    notifyListeners();
 
     try {
-      _users = await _apiService.fetchUsers();
+      _users = await userRepository.fetchUsers();
     } catch (e) {
-      _errorMessage = e.toString();
+      _error = e.toString();
     } finally {
       _isLoading = false;
-      notifyListeners(); // Hide spinner and show data/error
+      notifyListeners();
     }
   }
 }
